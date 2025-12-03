@@ -28,6 +28,7 @@ export interface Article {
   category_id: string | null
   source_url: string | null
   ai_generated: boolean
+  is_featured: boolean
   seo_title: string | null
   seo_description: string | null
   created_at: string
