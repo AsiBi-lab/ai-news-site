@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Navigation } from './Navigation'
 import { MobileMenu } from './MobileMenu'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import { SearchButton } from '@/components/shared'
 
 export function Header() {
   return (
@@ -19,6 +20,7 @@ export function Header() {
         <Navigation className="hidden md:flex" />
 
         <div className="flex items-center gap-2">
+          <SearchButton />
           <ThemeToggle />
           <MobileMenu className="md:hidden" />
         </div>

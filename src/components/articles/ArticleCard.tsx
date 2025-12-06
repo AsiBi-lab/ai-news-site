@@ -2,10 +2,18 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
 import Image from 'next/image'
-import type { Article, Category } from '@/types/database'
+
+interface ArticleCardProps {
+  slug: string
+  title: string
+  excerpt: string | null
+  featured_image: string | null
+  published_at: string | null
+  category: { name: string } | null
+}
 
 interface Props {
-  article: Article & { category: Category | null }
+  article: ArticleCardProps
 }
 
 export function ArticleCard({ article }: Props) {
