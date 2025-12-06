@@ -14,13 +14,15 @@ export function ShareButtons({ url, title, description }: ShareButtonsProps) {
 
   const encodedUrl = encodeURIComponent(url)
   const encodedTitle = encodeURIComponent(title)
-  const encodedDescription = encodeURIComponent(description || '')
+  const encodedText = description
+    ? `${encodedTitle}%20-%20${encodeURIComponent(description)}`
+    : encodedTitle
 
   const shareLinks = {
     twitter: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
     linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
     facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-    whatsapp: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`,
+    whatsapp: `https://wa.me/?text=${encodedText}%20${encodedUrl}`,
   }
 
   const copyToClipboard = async () => {

@@ -49,7 +49,7 @@ export async function FeaturedArticles() {
             <Sparkles className="h-5 w-5 text-primary" />
             <span className="text-sm font-medium text-primary">Featured</span>
           </div>
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">Editor's Picks</h2>
+          <h2 className="text-2xl md:text-3xl font-bold mb-4">Editor&apos;s Picks</h2>
           <p className="text-muted-foreground">No featured articles yet. Check back soon!</p>
         </div>
       </section>
@@ -65,7 +65,7 @@ export async function FeaturedArticles() {
               <Sparkles className="h-5 w-5 text-primary" />
               <span className="text-sm font-medium text-primary">Featured</span>
             </div>
-            <h2 className="text-2xl md:text-3xl font-bold">Editor's Picks</h2>
+            <h2 className="text-2xl md:text-3xl font-bold">Editor&apos;s Picks</h2>
           </div>
           <Link
             href="/articles"

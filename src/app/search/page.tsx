@@ -1,7 +1,6 @@
 import { Suspense } from 'react'
 import { SearchContent } from './SearchContent'
 import { ArticleCardSkeleton } from '@/components/articles/ArticleCardSkeleton'
-import { Search } from 'lucide-react'
 
 export const metadata = {
   title: 'Search Articles | AI News',
