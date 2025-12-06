@@ -3,8 +3,7 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Card, CardContent } from '@/components/ui/card'
-import { Mail } from 'lucide-react'
+import { Mail, CheckCircle2, ArrowRight } from 'lucide-react'
 
 export function Newsletter() {
   const [email, setEmail] = useState('')
@@ -21,43 +20,58 @@ export function Newsletter() {
   }
 
   return (
-    <section className="py-16">
-      <div className="container max-w-4xl">
-        <Card className="bg-gradient-to-br from-primary/10 via-background to-blue-500/10 border-primary/20">
-          <CardContent className="p-8 md:p-12 text-center">
-            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-primary/20 flex items-center justify-center">
-              <Mail className="h-8 w-8 text-primary" />
+    <section className="py-20">
+      <div className="container">
+        <div className="relative max-w-2xl mx-auto text-center">
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <Mail className="h-5 w-5 text-primary" />
+            <span className="text-sm font-medium text-primary">Newsletter</span>
+          </div>
+
+          <h2 className="text-2xl md:text-3xl font-bold mb-4">
+            Stay Ahead of the Curve
+          </h2>
+
+          <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+            Weekly insights on AI breakthroughs, industry trends, and practical applications. No spam.
+          </p>
+
+          {status === 'success' ? (
+            <div className="flex items-center justify-center gap-2 text-primary font-medium">
+              <CheckCircle2 className="h-5 w-5" />
+              <span>You're subscribed! Check your inbox.</span>
             </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+              <Input
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="flex-1 h-12 px-4 bg-background border-border/50 focus:border-primary"
+              />
+              <Button
+                type="submit"
+                disabled={status === 'loading'}
+                className="h-12 px-6 gap-2"
+              >
+                {status === 'loading' ? (
+                  'Subscribing...'
+                ) : (
+                  <>
+                    Subscribe
+                    <ArrowRight className="h-4 w-4" />
+                  </>
+                )}
+              </Button>
+            </form>
+          )}
 
-            <h2 className="text-2xl md:text-3xl font-bold mb-4">
-              Stay Updated with AI News
-            </h2>
-
-            <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
-              Get the latest AI insights delivered to your inbox. No spam, just quality content about artificial intelligence.
-            </p>
-
-            {status === 'success' ? (
-              <p className="text-green-600 dark:text-green-400 font-medium">
-                Thanks for subscribing! Check your inbox.
-              </p>
-            ) : (
-              <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-                <Input
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="flex-1"
-                />
-                <Button type="submit" disabled={status === 'loading'}>
-                  {status === 'loading' ? 'Subscribing...' : 'Subscribe'}
-                </Button>
-              </form>
-            )}
-          </CardContent>
-        </Card>
+          <p className="mt-4 text-xs text-muted-foreground">
+            Join 50,000+ AI professionals. Unsubscribe anytime.
+          </p>
+        </div>
       </div>
     </section>
   )

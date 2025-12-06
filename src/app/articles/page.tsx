@@ -1,6 +1,19 @@
 import { createClient } from '@/lib/supabase/server'
 import { ArticleCard } from '@/components/articles'
 import { CategoryFilter } from '@/components/shared/CategoryFilter'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Articles',
+  description: 'Latest AI news, breakthroughs, and insights about artificial intelligence, machine learning, and emerging tech.',
+  openGraph: {
+    title: 'Articles | AI News',
+    description: 'Latest AI news, breakthroughs, and insights about artificial intelligence.',
+  },
+}
+
+// Revalidate every 5 minutes
+export const revalidate = 300
 
 interface Props {
   searchParams: Promise<{ category?: string; page?: string }>

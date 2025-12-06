@@ -7,9 +7,14 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import { ArrowLeft } from 'lucide-react'
 
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+
 interface Props {
   params: Promise<{ slug: string }>
 }
+
+// Revalidate every hour
+export const revalidate = 3600
 
 async function getArticle(slug: string) {
   const supabase = await createClient()
@@ -29,9 +34,39 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const article = await getArticle(resolvedParams.slug)
   if (!article) return { title: 'Article Not Found' }
 
+  const canonicalUrl = `${BASE_URL}/articles/${article.slug}`
+  const ogImage = article.featured_image || '/og-default.png'
+
   return {
     title: article.seo_title || article.title,
     description: article.seo_description || article.excerpt,
+    authors: [{ name: 'AI News Team' }],
+    openGraph: {
+      type: 'article',
+      url: canonicalUrl,
+      title: article.seo_title || article.title,
+      description: article.seo_description || article.excerpt || '',
+      publishedTime: article.published_at,
+      modifiedTime: article.updated_at,
+      section: article.category?.name || 'AI News',
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: article.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: article.seo_title || article.title,
+      description: article.seo_description || article.excerpt || '',
+      images: [ogImage],
+    },
+    alternates: {
+      canonical: canonicalUrl,
+    },
   }
 }
 
@@ -40,8 +75,96 @@ export default async function ArticlePage({ params }: Props) {
   const article = await getArticle(resolvedParams.slug)
   if (!article) notFound()
 
+  // NewsArticle JSON-LD Schema
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: article.title,
+    description: article.excerpt || '',
+    image: article.featured_image ? [article.featured_image] : [],
+    datePublished: article.published_at,
+    dateModified: article.updated_at || article.published_at,
+    author: {
+      '@type': 'Organization',
+      name: 'AI News',
+      url: BASE_URL,
+    },
+    publisher: {
+      '@type': 'NewsMediaOrganization',
+      name: 'AI News',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${BASE_URL}/logo.png`,
+        width: 512,
+        height: 512,
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${BASE_URL}/articles/${article.slug}`,
+    },
+    articleSection: article.category?.name || 'AI News',
+    isAccessibleForFree: true,
+  }
+
+  // BreadcrumbList Schema
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: BASE_URL,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Articles',
+        item: `${BASE_URL}/articles`,
+      },
+      ...(article.category
+        ? [
+            {
+              '@type': 'ListItem',
+              position: 3,
+              name: article.category.name,
+              item: `${BASE_URL}/categories/${article.category.slug}`,
+            },
+            {
+              '@type': 'ListItem',
+              position: 4,
+              name: article.title,
+              item: `${BASE_URL}/articles/${article.slug}`,
+            },
+          ]
+        : [
+            {
+              '@type': 'ListItem',
+              position: 3,
+              name: article.title,
+              item: `${BASE_URL}/articles/${article.slug}`,
+            },
+          ]),
+    ],
+  }
+
   return (
-    <article className="container max-w-4xl py-8">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(articleSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema),
+        }}
+      />
+      <article className="container max-w-4xl py-8">
       <Button asChild variant="ghost" className="mb-6">
         <Link href="/articles">
           <ArrowLeft className="mr-2 h-4 w-4" />
@@ -119,5 +242,6 @@ export default async function ArticlePage({ params }: Props) {
         </div>
       )}
     </article>
+    </>
   )
 }
