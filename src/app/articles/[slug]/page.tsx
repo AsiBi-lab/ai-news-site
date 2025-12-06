@@ -230,7 +230,7 @@ export default async function ArticlePage({ params }: Props) {
       )}
 
       <div
-        className="prose prose-2xl md:prose-3xl dark:prose-invert max-w-4xl mx-auto text-center prose-headings:font-bold prose-headings:text-center prose-a:text-primary prose-img:rounded-lg prose-p:text-2xl md:prose-p:text-3xl prose-li:text-2xl md:prose-li:text-3xl prose-dd:text-2xl md:prose-dd:text-3xl prose-strong:text-4xl md:prose-strong:text-5xl prose-strong:font-bold prose-ul:list-disc prose-ul:pl-6 prose-ol:list-decimal prose-ol:pl-6"
+        className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg prose-p:leading-relaxed prose-li:leading-relaxed prose-blockquote:border-l-primary prose-blockquote:bg-muted/50 prose-blockquote:py-1 prose-blockquote:px-4 prose-blockquote:rounded-r-lg"
         dangerouslySetInnerHTML={{ __html: article.content }}
       />
 
