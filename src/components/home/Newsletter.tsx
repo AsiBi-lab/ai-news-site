@@ -8,15 +8,34 @@ import { Mail, CheckCircle2, ArrowRight } from 'lucide-react'
 export function Newsletter() {
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [message, setMessage] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setStatus('loading')
+    setMessage('')
 
-    // TODO: Implement newsletter signup with Supabase or external service
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    setStatus('success')
-    setEmail('')
+    try {
+      const response = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setStatus('success')
+        setMessage(data.message || "You're subscribed!")
+        setEmail('')
+      } else {
+        setStatus('error')
+        setMessage(data.error || 'Failed to subscribe')
+      }
+    } catch {
+      setStatus('error')
+      setMessage('Network error. Please try again.')
+    }
   }
 
   return (
@@ -39,7 +58,7 @@ export function Newsletter() {
           {status === 'success' ? (
             <div className="flex items-center justify-center gap-2 text-primary font-medium">
               <CheckCircle2 className="h-5 w-5" />
-              <span>You're subscribed! Check your inbox.</span>
+              <span>{message || "You're subscribed! Check your inbox."}</span>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
@@ -66,6 +85,10 @@ export function Newsletter() {
                 )}
               </Button>
             </form>
+          )}
+
+          {status === 'error' && message && (
+            <p className="mt-3 text-sm text-destructive">{message}</p>
           )}
 
           <p className="mt-4 text-xs text-muted-foreground">

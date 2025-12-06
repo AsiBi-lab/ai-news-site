@@ -8,13 +8,38 @@ import { ArrowRight, Sparkles } from 'lucide-react'
 export async function FeaturedArticles() {
   const supabase = await createClient()
 
-  const { data: articles } = await supabase
-    .from('articles')
-    .select('*, category:categories(*)')
-    .eq('status', 'published')
-    .eq('is_featured', true)
-    .order('published_at', { ascending: false })
-    .limit(3)
+  // Prefer articles tagged as "featured"; fall back to latest if none
+  const { data: featuredTag } = await supabase
+    .from('tags')
+    .select('id')
+    .eq('slug', 'featured')
+    .maybeSingle()
+
+  let articles = null
+
+  if (featuredTag?.id) {
+    const { data } = await supabase
+      .from('articles')
+      .select('*, category:categories(*), article_tags!inner(tag_id)')
+      .eq('status', 'published')
+      .eq('article_tags.tag_id', featuredTag.id)
+      .order('published_at', { ascending: false })
+      .limit(3)
+
+    articles = data
+  }
+
+  // Fallback: show latest published articles
+  if (!articles || articles.length === 0) {
+    const { data } = await supabase
+      .from('articles')
+      .select('*, category:categories(*)')
+      .eq('status', 'published')
+      .order('published_at', { ascending: false })
+      .limit(3)
+
+    articles = data
+  }
 
   if (!articles || articles.length === 0) {
     return (
