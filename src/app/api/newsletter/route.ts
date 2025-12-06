@@ -2,11 +2,13 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { checkRateLimit, getIP } from '@/lib/rate-limit'
 
-// Use service role for server-side operations
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+// Lazy initialization to avoid build-time errors
+function getSupabaseAdmin() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
 
 // Email validation
 function isValidEmail(email: string): boolean {
@@ -56,7 +58,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if already subscribed
-    const { data: existing } = await supabaseAdmin
+    const { data: existing } = await getSupabaseAdmin()
       .from('newsletter_subscribers')
       .select('id, status')
       .eq('email', normalizedEmail)
@@ -71,7 +73,7 @@ export async function POST(request: NextRequest) {
       }
       // Re-subscribe if previously unsubscribed
       if (existing.status === 'unsubscribed') {
-        await supabaseAdmin
+        await getSupabaseAdmin()
           .from('newsletter_subscribers')
           .update({
             status: 'confirmed',
@@ -88,7 +90,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Insert new subscriber
-    const { error: insertError } = await supabaseAdmin
+    const { error: insertError } = await getSupabaseAdmin()
       .from('newsletter_subscribers')
       .insert({
         email: normalizedEmail,
