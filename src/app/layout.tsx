@@ -1,15 +1,17 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Plus_Jakarta_Sans, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Providers } from './providers'
 import { Header } from '@/components/layout'
 import { Footer } from '@/components/layout'
+import { GradientSpheres } from '@/components/layout/GradientSpheres'
 import './globals.css'
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const plusJakarta = Plus_Jakarta_Sans({
+  variable: '--font-plus-jakarta',
   subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700', '800'],
 })
 
 const geistMono = Geist_Mono({
@@ -155,11 +157,12 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
+        className={`${plusJakarta.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col overflow-x-hidden`}
       >
         <Providers>
+          <GradientSpheres />
           <Header />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1 relative z-10">{children}</main>
           <Footer />
         </Providers>
         <Analytics />

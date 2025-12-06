@@ -3,11 +3,11 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
+import { motion } from 'framer-motion'
 
 const navItems = [
-  { href: '/', label: 'Home' },
+  { href: '/tools', label: 'Tools' },
   { href: '/articles', label: 'Articles' },
-  { href: '/tools', label: 'AI Tools' },
   { href: '/about', label: 'About' },
 ]
 
@@ -19,20 +19,44 @@ export function Navigation({ className }: NavigationProps) {
   const pathname = usePathname()
 
   return (
-    <nav className={cn('flex items-center gap-6', className)}>
-      {navItems.map((item) => (
-        <Link
+    <nav className={cn('flex items-center gap-8', className)}>
+      {navItems.map((item, index) => (
+        <motion.div
           key={item.href}
-          href={item.href}
-          className={cn(
-            'text-sm font-medium transition-colors hover:text-primary',
-            pathname === item.href
-              ? 'text-foreground'
-              : 'text-muted-foreground'
-          )}
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: index * 0.1, duration: 0.3 }}
         >
-          {item.label}
-        </Link>
+          <Link
+            href={item.href}
+            className={cn(
+              'relative font-medium transition-all duration-300 py-2 group',
+              pathname === item.href
+                ? 'text-genesis'
+                : 'text-genesis-muted hover:text-genesis'
+            )}
+          >
+            {item.label}
+            {/* Animated underline */}
+            <span
+              className={cn(
+                'absolute bottom-0 left-0 h-0.5 rounded-full transition-all duration-400 ease-out',
+                'bg-gradient-to-r from-[#6b8cce] via-[#8b7cb8] to-[#c88ba8]',
+                pathname === item.href
+                  ? 'w-full'
+                  : 'w-0 group-hover:w-full'
+              )}
+            />
+            {/* Hover glow effect */}
+            <span
+              className={cn(
+                'absolute inset-0 -z-10 rounded-lg opacity-0 transition-opacity duration-300',
+                'bg-gradient-to-r from-[#6b8cce]/10 via-[#8b7cb8]/10 to-[#c88ba8]/10',
+                'group-hover:opacity-100'
+              )}
+            />
+          </Link>
+        </motion.div>
       ))}
     </nav>
   )

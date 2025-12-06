@@ -1,83 +1,132 @@
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
+'use client'
+
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { AITool } from '@/types/database'
+import { motion } from 'framer-motion'
 
 interface Props {
   tool: AITool
+  index?: number
 }
 
 const pricingColors: Record<string, string> = {
-  free: 'bg-green-500/10 text-green-600 dark:text-green-400',
-  freemium: 'bg-blue-500/10 text-blue-600 dark:text-blue-400',
-  paid: 'bg-orange-500/10 text-orange-600 dark:text-orange-400',
-  enterprise: 'bg-purple-500/10 text-purple-600 dark:text-purple-400',
+  free: 'bg-emerald-500/20 text-emerald-600 dark:bg-emerald-500/30 dark:text-emerald-400',
+  freemium: 'bg-sky-500/20 text-sky-600 dark:bg-sky-500/30 dark:text-sky-400',
+  paid: 'bg-amber-500/20 text-amber-600 dark:bg-amber-500/30 dark:text-amber-400',
+  enterprise: 'bg-violet-500/20 text-violet-600 dark:bg-violet-500/30 dark:text-violet-400',
 }
 
-export function ToolCard({ tool }: Props) {
+export function ToolCard({ tool, index = 0 }: Props) {
   return (
-    <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-      <CardHeader className="flex flex-row items-center gap-4">
-        <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-muted flex items-center justify-center">
-          {tool.logo_url ? (
-            <Image src={tool.logo_url} alt={tool.name} fill className="object-cover" />
-          ) : (
-            <span className="text-xl font-bold text-muted-foreground">
-              {tool.name.charAt(0)}
-            </span>
-          )}
-        </div>
-        <div className="flex-1 min-w-0">
-          <h3 className="font-semibold truncate group-hover:text-primary transition-colors">
-            {tool.name}
-          </h3>
-          {tool.pricing && (
-            <Badge variant="secondary" className={pricingColors[tool.pricing] || ''}>
-              {tool.pricing}
-            </Badge>
-          )}
-        </div>
-      </CardHeader>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        delay: index * 0.08,
+        duration: 0.5,
+        ease: [0.25, 0.8, 0.25, 1]
+      }}
+    >
+      <Link href={`/tools/${tool.slug}`} className="block h-full group">
+        <div className="h-full card-genesis rounded-3xl overflow-hidden p-6 flex flex-col">
+          {/* Header */}
+          <div className="flex items-start gap-4 mb-4">
+            {/* Logo */}
+            <div className="relative w-14 h-14 rounded-2xl overflow-hidden bg-white/50 dark:bg-white/10 flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-110">
+              {tool.logo_url ? (
+                <Image
+                  src={tool.logo_url}
+                  alt={tool.name}
+                  fill
+                  className="object-cover"
+                />
+              ) : (
+                <span className="text-2xl font-bold text-genesis-muted">
+                  {tool.name.charAt(0)}
+                </span>
+              )}
+            </div>
 
-      <CardContent>
-        <p className="text-sm text-muted-foreground line-clamp-2">
-          {tool.description}
-        </p>
+            {/* Title & Pricing */}
+            <div className="flex-1 min-w-0">
+              <h3 className="font-semibold text-genesis truncate text-lg group-hover:text-gradient-animate transition-all duration-300">
+                {tool.name}
+              </h3>
+              {tool.pricing && (
+                <Badge
+                  variant="secondary"
+                  className={`${pricingColors[tool.pricing] || ''} mt-1 text-xs font-medium`}
+                >
+                  {tool.pricing}
+                </Badge>
+              )}
+            </div>
+          </div>
 
-        {tool.rating && (
-          <div className="flex items-center gap-1 mt-3">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <span
-                key={i}
-                className={
-                  i < Math.floor(tool.rating!)
-                    ? 'text-yellow-500'
-                    : 'text-muted-foreground/30'
-                }
+          {/* Description */}
+          <p className="text-sm text-genesis-muted line-clamp-2 leading-relaxed flex-1 font-light">
+            {tool.description}
+          </p>
+
+          {/* Footer */}
+          <div className="mt-4 pt-4 border-t border-white/20 dark:border-white/10 flex items-center justify-between">
+            {/* Rating */}
+            {tool.rating && (
+              <div className="flex items-center gap-1.5">
+                <div className="flex items-center">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <motion.span
+                      key={i}
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: index * 0.08 + i * 0.05, duration: 0.3 }}
+                      className={`text-sm ${
+                        i < Math.floor(tool.rating!)
+                          ? 'text-amber-400'
+                          : 'text-genesis-muted/30'
+                      }`}
+                    >
+                      ★
+                    </motion.span>
+                  ))}
+                </div>
+                <span className="text-xs text-genesis-muted font-medium">
+                  {tool.rating.toFixed(1)}
+                </span>
+              </div>
+            )}
+
+            {/* Category */}
+            {tool.category && (
+              <Badge variant="outline" className="text-xs bg-white/30 dark:bg-white/5 border-white/30 dark:border-white/10">
+                {tool.category}
+              </Badge>
+            )}
+          </div>
+
+          {/* View Details Arrow */}
+          <div className="mt-4 flex items-center justify-end opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0">
+            <span className="text-sm text-genesis-muted font-medium flex items-center gap-2">
+              View Details
+              <svg
+                className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
               >
-                ★
-              </span>
-            ))}
-            <span className="text-sm text-muted-foreground ml-1">
-              ({tool.rating.toFixed(1)})
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
+                />
+              </svg>
             </span>
           </div>
-        )}
-
-        {tool.category && (
-          <Badge variant="outline" className="mt-3">
-            {tool.category}
-          </Badge>
-        )}
-      </CardContent>
-
-      <CardFooter>
-        <Button asChild variant="ghost" className="w-full">
-          <Link href={`/tools/${tool.slug}`}>View Details</Link>
-        </Button>
-      </CardFooter>
-    </Card>
+        </div>
+      </Link>
+    </motion.div>
   )
 }
