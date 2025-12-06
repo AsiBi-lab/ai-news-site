@@ -1,44 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { checkRateLimit, getIP } from '@/lib/rate-limit'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
-// Rate limiting
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
-const RATE_LIMIT_WINDOW = 60 * 1000 // 1 minute
-const MAX_REQUESTS = 30
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now()
-  const record = rateLimitMap.get(ip)
-
-  if (!record || now > record.resetTime) {
-    rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW })
-    return false
-  }
-
-  if (record.count >= MAX_REQUESTS) {
-    return true
-  }
-
-  record.count++
-  return false
-}
-
 export async function GET(request: NextRequest) {
   try {
-    // Rate limiting
-    const ip = request.headers.get('x-forwarded-for')?.split(',')[0] ||
-               request.headers.get('x-real-ip') ||
-               'unknown'
+    // Rate limiting using Redis
+    const ip = getIP(request)
 
-    if (isRateLimited(ip)) {
+    const rateLimit = await checkRateLimit('search', ip)
+    if (!rateLimit.success) {
       return NextResponse.json(
         { error: 'Too many requests. Please try again later.' },
-        { status: 429 }
+        {
+          status: 429,
+          headers: {
+            'X-RateLimit-Remaining': rateLimit.remaining.toString(),
+            'X-RateLimit-Reset': rateLimit.reset.toString(),
+          },
+        }
       )
     }
 
