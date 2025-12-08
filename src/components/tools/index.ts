@@ -1,3 +1,5 @@
 export { ToolCard } from './ToolCard'
 export { ToolCardSkeleton } from './ToolCardSkeleton'
 export { ToolFilters } from './ToolFilters'
+export { ToolWidget } from './ToolWidget'
+export { ToolAccordion } from './ToolAccordion'

@@ -2,11 +2,12 @@ import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { RelatedArticles } from '@/components/articles'
+import { RelatedArticles, ArticleContent } from '@/components/articles'
 import { ShareButtons } from '@/components/shared'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import type { ArticleToolWithDetails } from '@/types/database'
 import { ArrowLeft } from 'lucide-react'
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
@@ -23,10 +24,26 @@ async function getArticle(slug: string) {
 
   const { data } = await supabase
     .from('articles')
-    .select('*, category:categories(*)')
+    .select(`
+      *,
+      category:categories(*),
+      article_tools(
+        *,
+        tool:ai_tools(*)
+      )
+    `)
     .eq('slug', slug)
     .eq('status', 'published')
     .single()
+
+  // Transform article_tools to match ArticleToolWithDetails type
+  if (data?.article_tools) {
+    data.article_tools = data.article_tools
+      .filter((at: { tool: unknown }) => at.tool !== null)
+      .sort((a: { display_order: number }, b: { display_order: number }) =>
+        a.display_order - b.display_order
+      ) as ArticleToolWithDetails[]
+  }
 
   return data
 }
@@ -229,9 +246,10 @@ export default async function ArticlePage({ params }: Props) {
         </div>
       )}
 
-      <div
+      <ArticleContent
+        content={article.content}
+        tools={article.article_tools || []}
         className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg prose-p:leading-relaxed prose-li:leading-relaxed prose-blockquote:border-l-primary prose-blockquote:bg-muted/50 prose-blockquote:py-1 prose-blockquote:px-4 prose-blockquote:rounded-r-lg"
-        dangerouslySetInnerHTML={{ __html: article.content }}
       />
 
       {article.source_url && (

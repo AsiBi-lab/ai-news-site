@@ -58,6 +58,28 @@ export interface AITool {
   updated_at: string
 }
 
+// Article-Tool relationship
+export interface ArticleTool {
+  id: string
+  article_id: string
+  tool_id: string
+  relationship_type: 'mentioned' | 'featured' | 'compared' | 'tutorial'
+  display_order: number
+  custom_summary: string | null
+  tips: string[]
+  prompt_examples: string[]
+  recommended_uses: string[]
+  created_at: string
+}
+
+export interface ArticleToolWithDetails extends ArticleTool {
+  tool: AITool
+}
+
+export interface ArticleWithTools extends ArticleWithRelations {
+  article_tools: ArticleToolWithDetails[]
+}
+
 // Supabase Query Types
 export interface ArticleFilters {
   status?: Article['status']

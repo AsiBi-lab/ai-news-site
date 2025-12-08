@@ -44,18 +44,21 @@ export function Footer() {
           </Link>
 
           {/* Nav */}
-          <nav className="flex items-center space-x-8 text-sm">
+          <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm">
             <Link href="/about" className="text-genesis-muted hover:text-genesis transition-colors">
               About
             </Link>
-            <Link href="/contact" className="text-genesis-muted hover:text-genesis transition-colors">
-              Contact
+            <Link href="/faq" className="text-genesis-muted hover:text-genesis transition-colors">
+              FAQ
             </Link>
             <Link href="/privacy" className="text-genesis-muted hover:text-genesis transition-colors">
               Privacy
             </Link>
-            <Link href="/feed.xml" className="text-genesis-muted hover:text-genesis transition-colors">
-              RSS
+            <Link href="/terms" className="text-genesis-muted hover:text-genesis transition-colors">
+              Terms
+            </Link>
+            <Link href="/disclosure" className="text-genesis-muted hover:text-genesis transition-colors">
+              Disclosure
             </Link>
           </nav>
 

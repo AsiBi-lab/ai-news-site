@@ -19,7 +19,7 @@ export function Navigation({ className }: NavigationProps) {
   const pathname = usePathname()
 
   return (
-    <nav className={cn('flex items-center gap-8', className)}>
+    <nav aria-label="Main navigation" className={cn('flex items-center gap-8', className)}>
       {navItems.map((item, index) => (
         <motion.div
           key={item.href}
@@ -29,6 +29,7 @@ export function Navigation({ className }: NavigationProps) {
         >
           <Link
             href={item.href}
+            aria-current={pathname === item.href ? 'page' : undefined}
             className={cn(
               'relative font-medium transition-all duration-300 py-2 group',
               pathname === item.href

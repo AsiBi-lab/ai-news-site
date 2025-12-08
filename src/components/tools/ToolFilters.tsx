@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Badge } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
 
 const pricingOptions = [
   { value: '', label: 'All' },
@@ -41,51 +41,86 @@ export function ToolFilters({ currentPricing, categories = [], currentCategory }
     router.push(`?${params.toString()}`)
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent, callback: () => void) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      callback()
+    }
+  }
+
   return (
     <div className="space-y-4">
       {/* Pricing Filter */}
-      <div>
-        <h4 className="text-sm font-medium mb-2">Pricing</h4>
-        <div className="flex flex-wrap gap-2">
-          {pricingOptions.map((option) => (
-            <Badge
-              key={option.value}
-              variant={
-                (currentPricing || '') === option.value ? 'default' : 'outline'
-              }
-              className="cursor-pointer hover:bg-primary/80 transition-colors"
-              onClick={() => handlePricingChange(option.value)}
-            >
-              {option.label}
-            </Badge>
-          ))}
+      <fieldset>
+        <legend className="text-sm font-medium mb-2">Pricing</legend>
+        <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by pricing">
+          {pricingOptions.map((option) => {
+            const isSelected = (currentPricing || '') === option.value
+            return (
+              <button
+                key={option.value}
+                type="button"
+                role="radio"
+                aria-checked={isSelected}
+                onClick={() => handlePricingChange(option.value)}
+                onKeyDown={(e) => handleKeyDown(e, () => handlePricingChange(option.value))}
+                className={cn(
+                  'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+                  isSelected
+                    ? 'border-transparent bg-primary text-primary-foreground hover:bg-primary/80'
+                    : 'border-input bg-background hover:bg-accent hover:text-accent-foreground'
+                )}
+              >
+                {option.label}
+              </button>
+            )
+          })}
         </div>
-      </div>
+      </fieldset>
 
       {/* Category Filter */}
       {categories.length > 0 && (
-        <div>
-          <h4 className="text-sm font-medium mb-2">Category</h4>
-          <div className="flex flex-wrap gap-2">
-            <Badge
-              variant={!currentCategory ? 'default' : 'outline'}
-              className="cursor-pointer hover:bg-primary/80 transition-colors"
+        <fieldset>
+          <legend className="text-sm font-medium mb-2">Category</legend>
+          <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by category">
+            <button
+              type="button"
+              role="radio"
+              aria-checked={!currentCategory}
               onClick={() => handleCategoryChange('')}
+              onKeyDown={(e) => handleKeyDown(e, () => handleCategoryChange(''))}
+              className={cn(
+                'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+                !currentCategory
+                  ? 'border-transparent bg-primary text-primary-foreground hover:bg-primary/80'
+                  : 'border-input bg-background hover:bg-accent hover:text-accent-foreground'
+              )}
             >
               All
-            </Badge>
-            {categories.map((category) => (
-              <Badge
-                key={category}
-                variant={currentCategory === category ? 'default' : 'outline'}
-                className="cursor-pointer hover:bg-primary/80 transition-colors"
-                onClick={() => handleCategoryChange(category)}
-              >
-                {category}
-              </Badge>
-            ))}
+            </button>
+            {categories.map((category) => {
+              const isSelected = currentCategory === category
+              return (
+                <button
+                  key={category}
+                  type="button"
+                  role="radio"
+                  aria-checked={isSelected}
+                  onClick={() => handleCategoryChange(category)}
+                  onKeyDown={(e) => handleKeyDown(e, () => handleCategoryChange(category))}
+                  className={cn(
+                    'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+                    isSelected
+                      ? 'border-transparent bg-primary text-primary-foreground hover:bg-primary/80'
+                      : 'border-input bg-background hover:bg-accent hover:text-accent-foreground'
+                  )}
+                >
+                  {category}
+                </button>
+              )
+            })}
           </div>
-        </div>
+        </fieldset>
       )}
     </div>
   )

@@ -1,84 +1,169 @@
 import { Card, CardContent } from '@/components/ui/card'
-import { Newspaper, Cpu, Users, Zap } from 'lucide-react'
+import { Search, Zap, Shield, Heart, Target, Clock } from 'lucide-react'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'About Us - AI News',
-  description: 'Learn about AI News - your daily source for artificial intelligence news, tutorials, and tool reviews.',
+  title: 'About Us',
+  description: 'AI Deck - Your shortcut to the perfect AI tool. We help you discover, compare, and choose from thousands of AI tools without the endless searching.',
 }
 
-const features = [
+const problems = [
   {
-    icon: Newspaper,
-    title: 'Daily AI News',
-    description: 'Stay updated with the latest developments in artificial intelligence, machine learning, and deep learning.',
+    icon: Clock,
+    problem: 'Hours of searching',
+    solution: 'Find the right tool in seconds',
   },
   {
-    icon: Cpu,
-    title: 'Tool Reviews',
-    description: 'In-depth reviews and comparisons of AI tools to help you choose the right solutions for your needs.',
+    icon: Search,
+    problem: 'Scattered information',
+    solution: 'Everything in one place',
   },
   {
-    icon: Users,
-    title: 'Community Driven',
-    description: 'Built for the AI community, featuring content that matters to developers, researchers, and enthusiasts.',
+    icon: Target,
+    problem: 'Wrong tool choices',
+    solution: 'Filter by your exact needs',
+  },
+]
+
+const values = [
+  {
+    icon: Shield,
+    title: 'Honest Reviews',
+    description: 'We never accept payment for positive reviews. Our opinions are always based on real evaluation, not affiliate commissions.',
   },
   {
     icon: Zap,
-    title: 'AI-Powered',
-    description: 'Some of our content is generated and curated using AI, reviewed by humans for quality.',
+    title: 'Save Your Time',
+    description: 'Life is too short for endless Google searches. We organize thousands of AI tools so you can find what you need instantly.',
+  },
+  {
+    icon: Search,
+    title: 'Every Use Case',
+    description: 'Whether you are a developer, marketer, designer, writer, or just curious - we have filters for your specific needs.',
+  },
+  {
+    icon: Heart,
+    title: 'Free Forever',
+    description: 'The core AI Deck experience will always be free. We believe everyone deserves access to AI tool discovery.',
   },
 ]
 
 export default function AboutPage() {
   return (
     <div className="container py-12 md:py-16">
-      {/* Hero */}
       <div className="max-w-3xl mx-auto text-center mb-16">
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
-          About{' '}
+          Your Shortcut to the{' '}
           <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-            AI News
+            Perfect AI Tool
           </span>
         </h1>
-        <p className="text-lg text-muted-foreground">
-          Your trusted source for artificial intelligence news, insights, and tool reviews.
-          We help you stay ahead in the rapidly evolving world of AI.
+        <p className="text-xl text-muted-foreground">
+          Stop wasting hours searching. Start building with the right AI tools.
         </p>
       </div>
 
-      {/* Features */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
-        {features.map((feature) => (
-          <Card key={feature.title} className="hover:shadow-lg transition-shadow">
-            <CardContent className="p-6">
-              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                <feature.icon className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-              <p className="text-muted-foreground">{feature.description}</p>
-            </CardContent>
-          </Card>
-        ))}
+      <div className="max-w-4xl mx-auto mb-16">
+        <h2 className="text-2xl font-bold text-center mb-8">The Problem We Solve</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {problems.map((item) => (
+            <Card key={item.problem} className="text-center">
+              <CardContent className="p-6">
+                <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4">
+                  <item.icon className="h-6 w-6 text-red-500" />
+                </div>
+                <p className="text-muted-foreground line-through mb-2">{item.problem}</p>
+                <p className="font-semibold text-green-600 dark:text-green-400">{item.solution}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
 
-      {/* Mission */}
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-3xl mx-auto mb-16">
         <Card className="bg-gradient-to-br from-primary/5 via-background to-blue-500/5 border-primary/20">
           <CardContent className="p-8 md:p-12">
-            <h2 className="text-2xl font-bold mb-4">Our Mission</h2>
+            <h2 className="text-2xl font-bold mb-6">What is AI Deck?</h2>
             <p className="text-muted-foreground mb-4">
-              AI News was created to democratize access to AI knowledge. We believe that everyone
-              should be able to understand and benefit from artificial intelligence, regardless
-              of their technical background.
+              AI Deck is a comprehensive directory of AI tools, organized by purpose, profession, category, and use case.
+              Think of it as your personal deck of cards - each card is an AI tool ready to help you solve a specific problem.
+            </p>
+            <p className="text-muted-foreground mb-4">
+              With thousands of AI tools launching every month, it is impossible to keep track of what is available.
+              We do the research so you do not have to. Our team continuously discovers, evaluates, and categorizes
+              AI tools so you can find exactly what you need in seconds.
             </p>
             <p className="text-muted-foreground">
-              Our team combines AI-powered content generation with human curation to bring you
-              the most relevant and accurate information about the AI landscape. From breaking
-              news to in-depth tutorials, we&apos;ve got you covered.
+              Whether you are looking for an AI writing assistant, image generator, code helper, productivity booster,
+              or something completely unique - AI Deck helps you find it.
             </p>
           </CardContent>
         </Card>
+      </div>
+
+      <div className="mb-16">
+        <h2 className="text-2xl font-bold text-center mb-8">What We Stand For</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          {values.map((value) => (
+            <Card key={value.title} className="hover:shadow-lg transition-shadow">
+              <CardContent className="p-6">
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                  <value.icon className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">{value.title}</h3>
+                <p className="text-muted-foreground">{value.description}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      <div className="max-w-3xl mx-auto mb-16">
+        <Card className="bg-gradient-to-br from-purple-500/10 via-background to-pink-500/5 border-purple-500/20">
+          <CardContent className="p-8 md:p-12">
+            <h2 className="text-2xl font-bold mb-6">Our Vision</h2>
+            <p className="text-muted-foreground mb-4">
+              We believe AI should be accessible to everyone - not just tech experts.
+              Our mission is to democratize AI discovery, making it easy for anyone to find
+              the tools that can transform their work and life.
+            </p>
+            <p className="text-muted-foreground">
+              AI Deck is just the beginning. We are building a complete ecosystem to help you
+              navigate the AI revolution. Stay tuned for what is coming next.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="max-w-3xl mx-auto text-center">
+        <h2 className="text-2xl font-bold mb-4">Ready to Find Your Perfect AI Tool?</h2>
+        <p className="text-muted-foreground mb-6">
+          Start exploring thousands of AI tools, filtered by exactly what you need.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="/tools"
+            className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
+          >
+            Browse AI Tools
+          </a>
+          <a
+            href="/categories"
+            className="inline-flex items-center justify-center px-6 py-3 rounded-lg border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors"
+          >
+            Explore Categories
+          </a>
+        </div>
+      </div>
+
+      <div className="max-w-3xl mx-auto mt-16 pt-8 border-t border-border text-center">
+        <p className="text-sm text-muted-foreground">
+          Questions? Check our <a href="/faq" className="text-primary hover:underline">FAQ</a>
+          {' | '}
+          Read our <a href="/disclosure" className="text-primary hover:underline">Affiliate Disclosure</a>
+          {' | '}
+          Contact: <a href="mailto:hello@aideck.io" className="text-primary hover:underline">hello@aideck.io</a>
+        </p>
       </div>
     </div>
   )
