@@ -1,5 +1,6 @@
 import { Ratelimit } from '@upstash/ratelimit'
 import { Redis } from '@upstash/redis'
+import { inMemoryRateLimit } from './in-memory-rate-limit'
 
 // Create Redis client only if env vars are set
 const redis = process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN
@@ -49,9 +50,10 @@ export async function checkRateLimit(
 ): Promise<{ success: boolean; remaining: number; reset: number }> {
   const limiter = rateLimiters[limiterKey]
 
-  // If Redis is not configured, allow all requests (fallback)
+  // If Redis is not configured, use in-memory fallback
   if (!limiter) {
-    return { success: true, remaining: -1, reset: 0 }
+    console.warn('⚠️  Redis not configured, using in-memory rate limiting')
+    return await inMemoryRateLimit(limiterKey, identifier)
   }
 
   const result = await limiter.limit(identifier)

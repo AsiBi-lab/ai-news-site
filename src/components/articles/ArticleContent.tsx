@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react'
 import { motion } from 'framer-motion'
+import DOMPurify from 'dompurify'
 import { parseArticleContent, findToolBySlug } from '@/lib/content/parseArticleContent'
 import { ToolWidget } from '@/components/tools/ToolWidget'
 import { ToolAccordion } from '@/components/tools/ToolAccordion'
@@ -23,6 +24,16 @@ export function ArticleContent({ content, tools, className = '' }: ArticleConten
     <div className={`article-content ${className}`}>
       {parsedContent.segments.map((segment, index) => {
         if (segment.type === 'html') {
+          // Sanitize HTML content to prevent XSS attacks
+          const sanitizedContent = useMemo(
+            () => DOMPurify.sanitize(segment.content, {
+              ALLOWED_TAGS: ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'strong', 'em', 'u', 'a', 'img', 'ul', 'ol', 'li', 'blockquote', 'code', 'pre', 'br', 'hr'],
+              ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'id'],
+              ALLOW_DATA_ATTR: false,
+            }),
+            [segment.content]
+          )
+
           return (
             <motion.div
               key={`html-${index}`}
@@ -30,7 +41,7 @@ export function ArticleContent({ content, tools, className = '' }: ArticleConten
               animate={{ opacity: 1 }}
               transition={{ duration: 0.4, delay: index * 0.05 }}
               className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg prose-p:leading-relaxed prose-li:leading-relaxed prose-blockquote:border-l-primary prose-blockquote:bg-muted/50 prose-blockquote:py-1 prose-blockquote:px-4 prose-blockquote:rounded-r-lg"
-              dangerouslySetInnerHTML={{ __html: segment.content }}
+              dangerouslySetInnerHTML={{ __html: sanitizedContent }}
             />
           )
         }
