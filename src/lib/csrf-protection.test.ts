@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest'
 import { validateOrigin, csrfGuard } from './csrf-protection'
-import { NextRequest } from 'next/server'
 
 describe('CSRF Protection', () => {
   describe('validateOrigin', () => {
@@ -65,6 +64,33 @@ describe('CSRF Protection', () => {
         headers: {
           get: (key: string) => {
             if (key === 'origin') return 'http://evil.localhost:3000'
+            return null
+          },
+        },
+      } as any
+
+      expect(validateOrigin(mockRequest)).toBe(false)
+    })
+
+    it('should block origin suffix attacks (e.g., localhost:3000.evil.com)', () => {
+      // This is a critical security test - startsWith would pass this, includes won't
+      const mockRequest = {
+        headers: {
+          get: (key: string) => {
+            if (key === 'origin') return 'http://localhost:3000.evil.com'
+            return null
+          },
+        },
+      } as any
+
+      expect(validateOrigin(mockRequest)).toBe(false)
+    })
+
+    it('should block origin with additional path', () => {
+      const mockRequest = {
+        headers: {
+          get: (key: string) => {
+            if (key === 'origin') return 'http://localhost:3000/malicious'
             return null
           },
         },

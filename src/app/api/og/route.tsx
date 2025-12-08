@@ -4,14 +4,34 @@ import { handleApiError } from '@/lib/error-handler'
 
 export const runtime = 'edge'
 
+// Maximum lengths to prevent DoS attacks
+const MAX_TITLE_LENGTH = 120
+const MAX_SUBTITLE_LENGTH = 200
+
+/**
+ * Sanitize text input for OG image generation
+ * - Limits length to prevent memory exhaustion
+ * - Removes potentially harmful characters
+ */
+function sanitizeOgText(text: string, maxLength: number): string {
+  return text
+    .substring(0, maxLength)
+    .replace(/[\x00-\x1F\x7F]/g, '') // Remove control characters
+    .trim()
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
 
-  // Get parameters
-  const title = searchParams.get('title') || 'AI Deck'
-  const subtitle = searchParams.get('subtitle') || 'Find the Perfect AI Tool'
-  const type = searchParams.get('type') || 'default' // default, tool, article
+    // Get and sanitize parameters to prevent DoS and injection
+    const rawTitle = searchParams.get('title') || 'AI Deck'
+    const rawSubtitle = searchParams.get('subtitle') || 'Find the Perfect AI Tool'
+    const rawType = searchParams.get('type') || 'default'
+
+    const title = sanitizeOgText(rawTitle, MAX_TITLE_LENGTH)
+    const subtitle = sanitizeOgText(rawSubtitle, MAX_SUBTITLE_LENGTH)
+    const type = ['default', 'tool', 'article'].includes(rawType) ? rawType : 'default'
 
     return new ImageResponse(
       (

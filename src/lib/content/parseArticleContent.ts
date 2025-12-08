@@ -67,12 +67,13 @@ export function parseArticleContent(
 
 /**
  * Find a tool by slug from the linked tools array
+ * @returns The tool data or null if not found
  */
 export function findToolBySlug(
   slug: string,
   tools: ArticleToolWithDetails[]
-): ArticleToolWithDetails | undefined {
-  return tools.find(t => t.tool.slug === slug)
+): ArticleToolWithDetails | null {
+  return tools.find(t => t.tool.slug === slug) ?? null
 }
 
 /**

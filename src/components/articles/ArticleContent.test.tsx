@@ -42,8 +42,12 @@ describe('ArticleContent Component', () => {
     const links = container.querySelectorAll('a')
     links.forEach(link => {
       const href = link.getAttribute('href')
-      // DOMPurify should remove javascript: URLs
-      expect(href).not.toMatch(/javascript:/i)
+      // DOMPurify removes javascript: URLs entirely (href becomes null)
+      // or replaces with safe value - either way, no javascript:
+      if (href !== null) {
+        expect(href).not.toMatch(/javascript:/i)
+      }
+      // null href is also acceptable - it means the malicious URL was removed
     })
   })
 
