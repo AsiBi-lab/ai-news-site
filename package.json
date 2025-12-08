@@ -10,7 +10,9 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
-    "test:watch": "vitest --watch"
+    "test:watch": "vitest --watch",
+    "validate:env": "node scripts/validate-env.js",
+    "prebuild": "npm run validate:env"
   },
   "dependencies": {
     "@radix-ui/react-dropdown-menu": "^2.1.16",

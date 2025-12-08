@@ -1,19 +1,21 @@
 import { ImageResponse } from 'next/og'
 import { NextRequest } from 'next/server'
+import { handleApiError } from '@/lib/error-handler'
 
 export const runtime = 'edge'
 
 export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url)
+  try {
+    const { searchParams } = new URL(request.url)
 
   // Get parameters
   const title = searchParams.get('title') || 'AI Deck'
   const subtitle = searchParams.get('subtitle') || 'Find the Perfect AI Tool'
   const type = searchParams.get('type') || 'default' // default, tool, article
 
-  return new ImageResponse(
-    (
-      <div
+    return new ImageResponse(
+      (
+        <div
         style={{
           height: '100%',
           width: '100%',
@@ -186,11 +188,17 @@ export async function GET(request: NextRequest) {
             aideck.io
           </span>
         </div>
-      </div>
-    ),
-    {
-      width: 1200,
-      height: 630,
-    }
-  )
+        </div>
+      ),
+      {
+        width: 1200,
+        height: 630,
+      }
+    )
+  } catch (error) {
+    return handleApiError(error, {
+      endpoint: '/api/og',
+      method: 'GET',
+    })
+  }
 }

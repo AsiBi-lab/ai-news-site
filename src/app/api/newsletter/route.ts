@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { checkRateLimit, getIP } from '@/lib/rate-limit'
+import { csrfGuard } from '@/lib/csrf-protection'
+import { handleApiError, handleDatabaseError } from '@/lib/error-handler'
 
 // Lazy initialization to avoid build-time errors
 function getSupabaseAdmin() {
@@ -18,6 +20,10 @@ function isValidEmail(email: string): boolean {
 
 export async function POST(request: NextRequest) {
   try {
+    // CSRF Protection - verify origin
+    const csrfError = csrfGuard(request)
+    if (csrfError) return csrfError
+
     // Get IP for rate limiting
     const ip = getIP(request)
 
@@ -106,11 +112,12 @@ export async function POST(request: NextRequest) {
           { status: 200 }
         )
       }
-      console.error('Newsletter subscription error:', insertError)
-      return NextResponse.json(
-        { error: 'Failed to subscribe. Please try again.' },
-        { status: 500 }
-      )
+      return handleDatabaseError(insertError, {
+        endpoint: '/api/newsletter',
+        method: 'POST',
+        action: 'insert_subscriber',
+        ip,
+      })
     }
 
     return NextResponse.json(
@@ -118,10 +125,10 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     )
   } catch (error) {
-    console.error('Newsletter API error:', error)
-    return NextResponse.json(
-      { error: 'An unexpected error occurred' },
-      { status: 500 }
-    )
+    return handleApiError(error, {
+      endpoint: '/api/newsletter',
+      method: 'POST',
+      ip: getIP(request),
+    })
   }
 }

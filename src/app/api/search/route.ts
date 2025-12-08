@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { checkRateLimit, getIP } from '@/lib/rate-limit'
+import { handleApiError, handleDatabaseError } from '@/lib/error-handler'
 
 // Lazy initialization to avoid build-time errors
 function getSupabase() {
@@ -59,11 +60,13 @@ export async function GET(request: NextRequest) {
       .limit(limit)
 
     if (error) {
-      console.error('Search error:', error)
-      return NextResponse.json(
-        { error: 'Search failed' },
-        { status: 500 }
-      )
+      return handleDatabaseError(error, {
+        endpoint: '/api/search',
+        method: 'GET',
+        action: 'search_articles',
+        query,
+        ip,
+      })
     }
 
     return NextResponse.json({
@@ -72,10 +75,10 @@ export async function GET(request: NextRequest) {
       count: articles?.length || 0
     })
   } catch (error) {
-    console.error('Search API error:', error)
-    return NextResponse.json(
-      { error: 'An unexpected error occurred' },
-      { status: 500 }
-    )
+    return handleApiError(error, {
+      endpoint: '/api/search',
+      method: 'GET',
+      ip: getIP(request),
+    })
   }
 }
