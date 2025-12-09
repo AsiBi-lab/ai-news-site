@@ -166,6 +166,19 @@ git push origin claude/ai-news-automation-research-0178CS2zQUqkg36wkJiAtsxd
 
 ---
 
+## Pre-prepared for Phase 10 (Database)
+
+SQL file ready: **`tasks/database-indexes.sql`**
+
+Contains recommended indexes for:
+- `articles` table (slug, status, published_at, category_id)
+- `categories` table (slug)
+- `ai_tools` table (slug, is_featured, category_id)
+
+Run in Supabase SQL Editor when you reach Phase 10.
+
+---
+
 **Good luck! בהצלחה!**
 
 ---
