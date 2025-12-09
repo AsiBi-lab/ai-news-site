@@ -11,6 +11,17 @@ function getSupabase() {
   )
 }
 
+/**
+ * Sanitize search query for safe use in ILIKE patterns
+ * Escapes special characters: %, _, \
+ */
+function sanitizeSearchQuery(query: string): string {
+  return query
+    .replace(/\\/g, '\\\\')  // Escape backslashes first
+    .replace(/%/g, '\\%')    // Escape percent signs
+    .replace(/_/g, '\\_')    // Escape underscores
+}
+
 export async function GET(request: NextRequest) {
   try {
     // Rate limiting using Redis
@@ -42,6 +53,9 @@ export async function GET(request: NextRequest) {
       )
     }
 
+    // Sanitize query for safe ILIKE pattern matching
+    const sanitizedQuery = sanitizeSearchQuery(query)
+
     // Search using ilike for title and excerpt
     const { data: articles, error } = await getSupabase()
       .from('articles')
@@ -55,7 +69,7 @@ export async function GET(request: NextRequest) {
         category:categories(name, slug)
       `)
       .eq('status', 'published')
-      .or(`title.ilike.%${query}%,excerpt.ilike.%${query}%`)
+      .or(`title.ilike.%${sanitizedQuery}%,excerpt.ilike.%${sanitizedQuery}%`)
       .order('published_at', { ascending: false })
       .limit(limit)
 

@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
 import { Search, Zap, Shield, Heart, Target, Clock } from 'lucide-react'
 import type { Metadata } from 'next'
@@ -141,26 +142,26 @@ export default function AboutPage() {
           Start exploring thousands of AI tools, filtered by exactly what you need.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <a
+          <Link
             href="/tools"
             className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
           >
             Browse AI Tools
-          </a>
-          <a
+          </Link>
+          <Link
             href="/categories"
             className="inline-flex items-center justify-center px-6 py-3 rounded-lg border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors"
           >
             Explore Categories
-          </a>
+          </Link>
         </div>
       </div>
 
       <div className="max-w-3xl mx-auto mt-16 pt-8 border-t border-border text-center">
         <p className="text-sm text-muted-foreground">
-          Questions? Check our <a href="/faq" className="text-primary hover:underline">FAQ</a>
+          Questions? Check our <Link href="/faq" className="text-primary hover:underline">FAQ</Link>
           {' | '}
-          Read our <a href="/disclosure" className="text-primary hover:underline">Affiliate Disclosure</a>
+          Read our <Link href="/disclosure" className="text-primary hover:underline">Affiliate Disclosure</Link>
           {' | '}
           Contact: <a href="mailto:hello@aideck.io" className="text-primary hover:underline">hello@aideck.io</a>
         </p>
