@@ -60,15 +60,16 @@ npm run lint
 
 **פירוט:**
 
-#### שגיאות קריטיות (צריך לתקן)
+#### שגיאות קריטיות - ✅ תוקנו!
 ```tsx
-// about/page.tsx - Lines 144, 150
-// ❌ Current
-<a href="/tools/">Browse Tools</a>
-
-// ✅ Fix
+// about/page.tsx - תוקן!
+// הוחלפו כל ה-<a> הפנימיים ב-<Link>:
 import Link from 'next/link'
-<Link href="/tools/">Browse Tools</Link>
+<Link href="/tools">Browse AI Tools</Link>
+<Link href="/categories">Explore Categories</Link>
+<Link href="/faq">FAQ</Link>
+<Link href="/disclosure">Affiliate Disclosure</Link>
+// mailto: נשאר <a> כי זה external
 ```
 
 #### שגיאות בינוניות (ניתן להתעלם)
@@ -174,9 +175,9 @@ src/
 
 ## בעיות קריטיות (חייב לתקן)
 
-| בעיה | קובץ | תיקון |
+| בעיה | קובץ | סטטוס |
 |------|------|-------|
-| Missing `<Link>` | about/page.tsx | החלף `<a>` ב-`<Link>` |
+| ~~Missing `<Link>`~~ | about/page.tsx | ✅ **תוקן** - הוחלפו כל ה-`<a>` הפנימיים ב-`<Link>` |
 
 ---
 

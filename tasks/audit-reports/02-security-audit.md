@@ -143,14 +143,21 @@ const title = sanitizeOgText(rawTitle, MAX_TITLE_LENGTH)    // 120 chars
 const subtitle = sanitizeOgText(rawSubtitle, MAX_SUBTITLE_LENGTH) // 200 chars
 ```
 
-#### Search API ⚠️ (בעיה בינונית)
+#### Search API ✅ (תוקן)
 ```typescript
-// Line 58 - Query interpolated directly
-.or(`title.ilike.%${query}%,excerpt.ilike.%${query}%`)
+// תוקן! הוספנו sanitizeSearchQuery function:
+function sanitizeSearchQuery(query: string): string {
+  return query
+    .replace(/\\/g, '\\\\')  // Escape backslashes first
+    .replace(/%/g, '\\%')    // Escape percent signs
+    .replace(/_/g, '\\_')    // Escape underscores
+}
+
+const sanitizedQuery = sanitizeSearchQuery(query)
+.or(`title.ilike.%${sanitizedQuery}%,excerpt.ilike.%${sanitizedQuery}%`)
 ```
 
-**סיכון:** אם Supabase לא מבצע escaping נכון, יתכן SQL injection.
-**הערכה:** סיכון נמוך - Supabase בד"כ מטפל בזה, אבל לא אידיאלי.
+**סטטוס:** ✅ תוקן - ILIKE wildcards מנוטרלים כעת.
 
 ---
 
@@ -192,7 +199,7 @@ grep -r "eyJ\|sk-\|pk_\|AKIA" src/
 |---|--------|-------|-------|
 | A01 | Broken Access Control | ✅ N/A | אין authentication באתר |
 | A02 | Cryptographic Failures | ✅ | HTTPS enforced (HSTS) |
-| A03 | Injection | ⚠️ | Search route - בדוק |
+| A03 | Injection | ✅ | Search route - תוקן עם sanitizeSearchQuery |
 | A04 | Insecure Design | ✅ | Architecture מאובטחת |
 | A05 | Security Misconfiguration | ✅ | Headers נכונים |
 | A06 | Vulnerable Components | ✅ | npm audit clean |
@@ -211,19 +218,21 @@ grep -r "eyJ\|sk-\|pk_\|AKIA" src/
 
 ## בעיות בינוניות (כדאי לתקן)
 
-| בעיה | קובץ | חומרה | זמן תיקון |
-|------|------|-------|-----------|
-| Search query interpolation | search/route.ts:58 | 🟡 בינוני | 15 דקות |
-| OG route ללא rate limiting | og/route.tsx | 🟡 נמוך | 10 דקות |
+| בעיה | קובץ | חומרה | סטטוס |
+|------|------|-------|-------|
+| ~~Search query interpolation~~ | search/route.ts | ~~🟡 בינוני~~ | ✅ **תוקן** |
+| OG route ללא rate limiting | og/route.tsx | 🟡 נמוך | פתוח (נמוך) |
 
-### תיקון מומלץ לחיפוש:
+### תיקון שבוצע לחיפוש:
 
 ```typescript
-// Option 1: Escape special characters
-const escapedQuery = query.replace(/[%_\\]/g, '\\$&')
-
-// Option 2: Use textSearch instead of ilike
-.textSearch('title', query, { type: 'websearch' })
+// נוסף sanitizeSearchQuery function:
+function sanitizeSearchQuery(query: string): string {
+  return query
+    .replace(/\\/g, '\\\\')  // Escape backslashes
+    .replace(/%/g, '\\%')    // Escape percent signs
+    .replace(/_/g, '\\_')    // Escape underscores
+}
 ```
 
 ---
