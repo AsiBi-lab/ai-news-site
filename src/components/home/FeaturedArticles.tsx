@@ -51,7 +51,7 @@ export async function FeaturedArticles() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="stagger-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {articles.map((article, index) => {
             const formattedDate = article.published_at
               ? new Date(article.published_at).toLocaleDateString('en-US', {
@@ -61,7 +61,7 @@ export async function FeaturedArticles() {
               : null
 
             return (
-              <Link key={article.id} href={`/articles/${article.slug}`} className="group block">
+              <Link key={article.id} href={`/articles/${article.slug}`} className="group block" aria-label={`Read article: ${article.title}`}>
                 <Card className="h-full overflow-hidden border-border/50 bg-card/50 hover:bg-card hover:border-border transition-all duration-200">
                   {article.featured_image && (
                     <div className="relative aspect-[16/10] overflow-hidden">
