@@ -8,38 +8,13 @@ import { ArrowRight, Sparkles } from 'lucide-react'
 export async function FeaturedArticles() {
   const supabase = await createClient()
 
-  // Prefer articles tagged as "featured"; fall back to latest if none
-  const { data: featuredTag } = await supabase
-    .from('tags')
-    .select('id')
-    .eq('slug', 'featured')
-    .maybeSingle()
-
-  let articles = null
-
-  if (featuredTag?.id) {
-    const { data } = await supabase
-      .from('articles')
-      .select('*, category:categories(*), article_tags!inner(tag_id)')
-      .eq('status', 'published')
-      .eq('article_tags.tag_id', featuredTag.id)
-      .order('published_at', { ascending: false })
-      .limit(3)
-
-    articles = data
-  }
-
-  // Fallback: show latest published articles
-  if (!articles || articles.length === 0) {
-    const { data } = await supabase
-      .from('articles')
-      .select('*, category:categories(*)')
-      .eq('status', 'published')
-      .order('published_at', { ascending: false })
-      .limit(3)
-
-    articles = data
-  }
+  // Get the 4 most recent published articles
+  const { data: articles } = await supabase
+    .from('articles')
+    .select('*, category:categories(*)')
+    .eq('status', 'published')
+    .order('published_at', { ascending: false })
+    .limit(4)
 
   if (!articles || articles.length === 0) {
     return (
@@ -47,10 +22,10 @@ export async function FeaturedArticles() {
         <div className="container">
           <div className="flex items-center gap-2 mb-3">
             <Sparkles className="h-5 w-5 text-primary" />
-            <span className="text-sm font-medium text-primary">Featured</span>
+            <span className="text-sm font-medium text-primary">Latest</span>
           </div>
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">Editor&apos;s Picks</h2>
-          <p className="text-muted-foreground">No featured articles yet. Check back soon!</p>
+          <h2 className="text-2xl md:text-3xl font-bold mb-4">Latest Articles</h2>
+          <p className="text-muted-foreground">No articles yet. Check back soon!</p>
         </div>
       </section>
     )
@@ -63,9 +38,9 @@ export async function FeaturedArticles() {
           <div>
             <div className="flex items-center gap-2 mb-3">
               <Sparkles className="h-5 w-5 text-primary" />
-              <span className="text-sm font-medium text-primary">Featured</span>
+              <span className="text-sm font-medium text-primary">Latest</span>
             </div>
-            <h2 className="text-2xl md:text-3xl font-bold">Editor&apos;s Picks</h2>
+            <h2 className="text-2xl md:text-3xl font-bold">Latest Articles</h2>
           </div>
           <Link
             href="/articles"
