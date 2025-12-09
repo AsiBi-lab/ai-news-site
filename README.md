@@ -1,36 +1,191 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Deck - AI Tools Discovery Platform
+
+A modern, SEO-optimized AI tools directory and news site built with Next.js 16, Supabase, and TypeScript.
+
+## Features
+
+- **AI Tools Directory**: Browse and discover AI tools organized by category
+- **News & Articles**: Stay updated with the latest AI news and tutorials
+- **Newsletter**: Subscribe for AI news updates
+- **SEO Optimized**: Full SEO support with dynamic metadata, sitemaps, and structured data
+- **GDPR Compliant**: Cookie consent and privacy policy included
+- **Secure**: Rate limiting, CSRF protection, XSS prevention, CSP headers
+
+## Tech Stack
+
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
+- **Database**: [Supabase](https://supabase.com/) (PostgreSQL)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **UI Components**: [shadcn/ui](https://ui.shadcn.com/)
+- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **Testing**: [Vitest](https://vitest.dev/) + Testing Library
+- **Deployment**: [Vercel](https://vercel.com/)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18+
+- npm or yarn
+- Supabase account
+
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/your-org/ai-news-site.git
+cd ai-news-site
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Set up environment variables:
+```bash
+cp .env.example .env.local
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Configure your `.env.local`:
+```env
+# Supabase (Required)
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 
-## Learn More
+# Site Configuration
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
-To learn more about Next.js, take a look at the following resources:
+# Rate Limiting (Optional - uses in-memory fallback if not set)
+UPSTASH_REDIS_REST_URL=your_upstash_url
+UPSTASH_REDIS_REST_TOKEN=your_upstash_token
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+5. Run the development server:
+```bash
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+6. Open [http://localhost:3000](http://localhost:3000)
 
-## Deploy on Vercel
+## Scripts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Build for production |
+| `npm start` | Start production server |
+| `npm run lint` | Run ESLint |
+| `npm test` | Run tests |
+| `npm run test:ui` | Run tests with UI |
+| `npm run test:coverage` | Run tests with coverage |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Project Structure
+
+```
+ai-news-site/
+├── src/
+│   ├── app/                 # Next.js App Router pages
+│   │   ├── api/            # API routes
+│   │   ├── articles/       # Article pages
+│   │   ├── categories/     # Category pages
+│   │   ├── tools/          # AI tools pages
+│   │   └── ...
+│   ├── components/         # React components
+│   │   ├── articles/       # Article components
+│   │   ├── layout/         # Layout components
+│   │   ├── tools/          # Tool components
+│   │   └── ui/             # shadcn/ui components
+│   ├── lib/                # Utilities and helpers
+│   │   ├── supabase/       # Supabase clients
+│   │   ├── rate-limit.ts   # Rate limiting
+│   │   ├── csrf-protection.ts
+│   │   └── ...
+│   └── test/               # Test setup
+├── public/                 # Static assets
+└── ...
+```
+
+## Security Features
+
+| Feature | Implementation |
+|---------|---------------|
+| **XSS Protection** | DOMPurify sanitization |
+| **CSRF Protection** | Origin header validation |
+| **Rate Limiting** | Upstash Redis / In-memory fallback |
+| **CSP Headers** | Nonce-based Content Security Policy |
+| **Input Validation** | Email, query validation |
+| **Error Handling** | Sanitized error messages in production |
+
+## SEO Features
+
+- Dynamic metadata for all pages
+- XML Sitemaps (`/sitemap.xml`, `/news-sitemap.xml`)
+- RSS Feed (`/feed.xml`)
+- Robots.txt with AI bot rules
+- Structured data (NewsArticle, Organization, BreadcrumbList)
+- Open Graph and Twitter Card support
+
+## Testing
+
+Run the test suite:
+```bash
+# Run all tests
+npm test
+
+# Run with UI
+npm run test:ui
+
+# Run with coverage
+npm run test:coverage
+```
+
+Current test coverage: **75 tests passing**
+
+## Deployment
+
+### Vercel (Recommended)
+
+1. Push to GitHub
+2. Import project in Vercel
+3. Configure environment variables
+4. Deploy
+
+### Manual Deployment
+
+```bash
+npm run build
+npm start
+```
+
+## API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/search` | GET | Search articles and tools |
+| `/api/newsletter` | POST | Subscribe to newsletter |
+| `/api/og` | GET | Dynamic OG images |
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests: `npm test`
+5. Submit a pull request
+
+## License
+
+MIT
+
+## Audit Reports
+
+- [Security Audit](./FINAL_SECURITY_AUDIT_REPORT.md)
+- [Dependency Audit](./DEPENDENCY_AUDIT.md)
+- [Performance Audit](./PERFORMANCE_AND_QUALITY_AUDIT.md)
+- [Code Quality](./CODE_QUALITY_SCAN.md)
+
+---
+
+Built with by AI Deck Team
