@@ -23,25 +23,26 @@ export async function CategoryGrid() {
   }
 
   return (
-    <section className="py-16">
+    <section className="py-16 md:py-24 relative bg-neutral-950/50">
       <div className="container">
-        <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center">
+        <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center font-display text-white">
           Explore by Category
         </h2>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {categories.map((category) => (
             <Link key={category.id} href={`/categories/${category.slug}`}>
-              <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-primary/50">
-                <CardContent className="p-6 text-center">
-                  <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                    {categoryIcons[category.slug] || <Newspaper className="h-6 w-6" />}
+              <Card className="group h-full border-white/10 bg-neutral-900/50 hover:bg-neutral-800/80 hover:border-indigo-500/50 transition-all duration-300 relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <CardContent className="p-6 flex flex-col items-center text-center h-full justify-center relative z-10">
+                  <div className="w-16 h-16 mb-6 rounded-2xl bg-neutral-800 border border-white/5 flex items-center justify-center text-indigo-400 group-hover:scale-110 group-hover:rotate-3 group-hover:bg-indigo-500/20 group-hover:text-indigo-300 transition-all duration-300 shadow-lg">
+                    {categoryIcons[category.slug] || <Newspaper className="h-8 w-8" />}
                   </div>
-                  <h3 className="font-semibold group-hover:text-primary transition-colors">
+                  <h3 className="font-bold text-xl mb-2 text-white group-hover:text-indigo-300 transition-colors font-display">
                     {category.name}
                   </h3>
                   {category.description && (
-                    <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+                    <p className="text-sm text-neutral-400 line-clamp-2 group-hover:text-neutral-300 transition-colors">
                       {category.description}
                     </p>
                   )}
