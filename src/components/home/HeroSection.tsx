@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import { containerVariants, itemVariants, statVariants, EASE_SMOOTH } from '@/lib/animations/variants'
 
 const stats = [
   { number: '500+', label: 'Curated Tools' },
@@ -11,41 +12,6 @@ const stats = [
 ]
 
 const trustedBy = ['Google', 'Microsoft', 'Shopify', 'Stripe', 'Notion', 'Figma']
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.2,
-    }
-  }
-}
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease: 'easeOut' as const
-    }
-  }
-}
-
-const statVariants = {
-  hidden: { opacity: 0, scale: 0.8 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: {
-      duration: 0.5,
-      ease: 'easeOut' as const
-    }
-  }
-}
 
 export function HeroSection() {
   return (
@@ -112,25 +78,24 @@ export function HeroSection() {
           className="flex flex-col items-center gap-4"
         >
           <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.15 }}
           >
             <Link
               href="/tools"
-              className="btn-genesis btn-glow btn-ripple font-semibold px-10 py-4 rounded-full text-lg inline-flex items-center gap-3 group relative overflow-hidden"
+              className="btn-genesis font-semibold px-10 py-4 rounded-full text-lg inline-flex items-center gap-3 group"
             >
-              <motion.svg
+              <svg
                 className="w-5 h-5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
-                animate={{ rotate: [0, 10, -10, 0] }}
-                transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </motion.svg>
-              <span className="relative z-10">Find My AI Tool</span>
-              <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              </svg>
+              <span>Find My AI Tool</span>
+              <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </Link>
@@ -173,7 +138,7 @@ export function HeroSection() {
         className="max-w-4xl mx-auto mt-16 px-6"
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8, duration: 0.6, ease: [0.25, 0.8, 0.25, 1] }}
+        transition={{ delay: 0.8, duration: 0.6, ease: EASE_SMOOTH }}
       >
         <div className="card-genesis rounded-3xl p-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">

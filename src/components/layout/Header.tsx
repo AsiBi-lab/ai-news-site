@@ -6,6 +6,7 @@ import { MobileMenu } from './MobileMenu'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { SearchButton } from '@/components/shared'
 import { motion } from 'framer-motion'
+import { EASE_SMOOTH } from '@/lib/animations/variants'
 
 export function Header() {
   return (
@@ -13,7 +14,7 @@ export function Header() {
       className="sticky top-0 z-50 w-full py-6 relative"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.25, 0.8, 0.25, 1] }}
+      transition={{ duration: 0.5, ease: EASE_SMOOTH }}
     >
       {/* Glassmorphism background */}
       <div className="absolute inset-0 bg-white/30 dark:bg-slate-900/30 backdrop-blur-xl border-b border-white/20 dark:border-white/5" />
@@ -52,9 +53,9 @@ export function Header() {
             >
               <Link
                 href="/tools"
-                className="btn-genesis btn-glow btn-ripple px-5 py-2.5 rounded-full font-semibold text-sm inline-block relative overflow-hidden"
+                className="btn-genesis px-5 py-2.5 rounded-full font-semibold text-sm inline-block"
               >
-                <span className="relative z-10">Explore Tools</span>
+                Explore Tools
               </Link>
             </motion.div>
             <MobileMenu className="md:hidden" />

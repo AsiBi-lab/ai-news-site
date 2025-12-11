@@ -1,8 +1,10 @@
 'use client'
 
+import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
+import { EASE_SMOOTH } from '@/lib/animations/variants'
 
 interface ArticleCardProps {
   slug: string
@@ -18,7 +20,7 @@ interface Props {
   index?: number
 }
 
-export function ArticleCard({ article, index = 0 }: Props) {
+export const ArticleCard = React.memo(function ArticleCard({ article, index = 0 }: Props) {
   const formattedDate = article.published_at
     ? new Date(article.published_at).toLocaleDateString('en-US', {
         month: 'short',
@@ -34,7 +36,7 @@ export function ArticleCard({ article, index = 0 }: Props) {
       transition={{
         delay: index * 0.1,
         duration: 0.5,
-        ease: [0.25, 0.8, 0.25, 1]
+        ease: EASE_SMOOTH
       }}
     >
       <Link href={`/articles/${article.slug}`} className="group block h-full">
@@ -45,6 +47,7 @@ export function ArticleCard({ article, index = 0 }: Props) {
                 src={article.featured_image}
                 alt={article.title}
                 fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 className="object-cover transition-transform duration-700 ease-out group-hover:scale-110 opacity-90"
               />
               {/* Gradient overlay on hover */}
@@ -109,4 +112,4 @@ export function ArticleCard({ article, index = 0 }: Props) {
       </Link>
     </motion.div>
   )
-}
+})

@@ -69,6 +69,8 @@ export async function FeaturedArticles() {
                         src={article.featured_image}
                         alt={article.title}
                         fill
+                        priority={index === 0}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                         className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
                       />
                       {index === 0 && (

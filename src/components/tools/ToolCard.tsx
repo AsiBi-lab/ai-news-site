@@ -1,10 +1,12 @@
 'use client'
 
+import React from 'react'
 import { Badge } from '@/components/ui/badge'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { AITool } from '@/types/database'
 import { motion } from 'framer-motion'
+import { EASE_SMOOTH } from '@/lib/animations/variants'
 
 interface Props {
   tool: AITool
@@ -18,7 +20,7 @@ const pricingColors: Record<string, string> = {
   enterprise: 'bg-violet-500/20 text-violet-600 dark:bg-violet-500/30 dark:text-violet-400',
 }
 
-export function ToolCard({ tool, index = 0 }: Props) {
+export const ToolCard = React.memo(function ToolCard({ tool, index = 0 }: Props) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -26,7 +28,7 @@ export function ToolCard({ tool, index = 0 }: Props) {
       transition={{
         delay: index * 0.08,
         duration: 0.5,
-        ease: [0.25, 0.8, 0.25, 1]
+        ease: EASE_SMOOTH
       }}
     >
       <Link href={`/tools/${tool.slug}`} className="block h-full group">
@@ -40,6 +42,7 @@ export function ToolCard({ tool, index = 0 }: Props) {
                   src={tool.logo_url}
                   alt={tool.name}
                   fill
+                  sizes="56px"
                   className="object-cover"
                 />
               ) : (
@@ -129,4 +132,4 @@ export function ToolCard({ tool, index = 0 }: Props) {
       </Link>
     </motion.div>
   )
-}
+})

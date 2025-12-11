@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { AITool } from '@/types/database'
 import { motion } from 'framer-motion'
+import { EASE_SMOOTH } from '@/lib/animations/variants'
 import { ExternalLink } from 'lucide-react'
 
 interface ToolWidgetProps {
@@ -33,7 +34,7 @@ export function ToolWidget({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.25, 0.8, 0.25, 1] }}
+      transition={{ duration: 0.5, ease: EASE_SMOOTH }}
       className={`my-8 ${className}`}
     >
       <div className="card-genesis rounded-2xl overflow-hidden p-5">

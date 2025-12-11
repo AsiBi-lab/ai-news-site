@@ -2,6 +2,7 @@
 
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { useRef, MouseEvent } from 'react'
+import { EASE_SMOOTH } from '@/lib/animations/variants'
 
 interface Props {
   children: React.ReactNode
@@ -72,7 +73,7 @@ export function AnimatedCard({
       transition={{
         delay: index * 0.1,
         duration: 0.5,
-        ease: [0.25, 0.8, 0.25, 1]
+        ease: EASE_SMOOTH
       }}
       style={{
         rotateX: enableTilt ? rotateX : 0,
@@ -82,7 +83,7 @@ export function AnimatedCard({
       }}
       whileHover={{
         y: -8,
-        transition: { duration: 0.3, ease: [0.25, 0.8, 0.25, 1] }
+        transition: { duration: 0.3, ease: EASE_SMOOTH }
       }}
       whileTap={{ scale: 0.98 }}
       onMouseMove={handleMouseMove}
@@ -123,7 +124,7 @@ export function FadeInUp({
       transition={{
         delay,
         duration: 0.5,
-        ease: [0.25, 0.8, 0.25, 1]
+        ease: EASE_SMOOTH
       }}
     >
       {children}
@@ -177,7 +178,7 @@ export function StaggerItem({
           y: 0,
           transition: {
             duration: 0.5,
-            ease: [0.25, 0.8, 0.25, 1]
+            ease: EASE_SMOOTH
           }
         }
       }}

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { EASE_SMOOTH } from '@/lib/animations/variants'
 import {
   Lightbulb,
   MessageSquare,
@@ -187,7 +188,7 @@ export function ToolAccordion({
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: 'auto', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.3, ease: [0.25, 0.8, 0.25, 1] }}
+                transition={{ duration: 0.3, ease: EASE_SMOOTH }}
               >
                 <div className="px-4 pb-4">
                   {section.id === 'pros_cons' ? (

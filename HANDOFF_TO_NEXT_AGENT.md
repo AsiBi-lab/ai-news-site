@@ -166,8 +166,25 @@ git push origin claude/ai-news-automation-research-0178CS2zQUqkg36wkJiAtsxd
 
 ---
 
-## Pre-prepared for Phase 10 (Database)
+## Pre-prepared Resources
 
+### For Phase 5 (SEO)
+JSON file ready: **`tasks/seo-schemas.json`**
+
+Production-ready Schema.org JSON-LD templates:
+- `WebSite` schema with SearchAction
+- `Organization` schema with social profiles
+- `Article` & `NewsArticle` schemas
+- `BreadcrumbList` schema
+- `SoftwareApplication` schema for AI tools
+- `FAQPage` schema
+- `ItemList` schema for listings
+- Complete implementation guide for Next.js 15
+- Placeholder reference documentation
+
+All templates follow Google's structured data guidelines and are ready to use.
+
+### For Phase 10 (Database)
 SQL file ready: **`tasks/database-indexes.sql`**
 
 Contains recommended indexes for:
