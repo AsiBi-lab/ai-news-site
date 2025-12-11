@@ -7,7 +7,11 @@ import Link from 'next/link'
 import { Scale } from 'lucide-react'
 import type { AITool } from '@/types/database'
 import { motion } from 'framer-motion'
-import { EASE_SMOOTH } from '@/lib/animations/variants'
+import { useAnimationContext, useReducedAnimations } from '@/lib/animations/useAnimationContext'
+import {
+  getStaggerDelay,
+  getMobileStaggerDelay,
+} from '@/lib/animations/variants'
 
 interface Props {
   tool: AITool
@@ -22,16 +26,66 @@ const pricingColors: Record<string, string> = {
   enterprise: 'bg-violet-500/20 text-violet-600 dark:bg-violet-500/30 dark:text-violet-400',
 }
 
+// Static star rating component - no animation overhead
+const StarRating = React.memo(function StarRating({ rating }: { rating: number }) {
+  return (
+    <div className="flex items-center gap-1.5">
+      <div className="flex items-center">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <span
+            key={i}
+            className={`text-sm ${
+              i < Math.floor(rating)
+                ? 'text-amber-400'
+                : 'text-genesis-muted/30'
+            }`}
+          >
+            ★
+          </span>
+        ))}
+      </div>
+      <span className="text-xs text-genesis-muted font-medium">
+        {rating.toFixed(1)}
+      </span>
+    </div>
+  )
+})
+
 export const ToolCard = React.memo(function ToolCard({ tool, index = 0, showCompare = true }: Props) {
+  const animContext = useAnimationContext()
+  const reducedAnimations = useReducedAnimations()
+
+  // Get appropriate animation based on context
+  const getTransition = () => {
+    if (animContext === 'reduced') {
+      return { duration: 0 }
+    }
+    if (animContext === 'mobile') {
+      return getMobileStaggerDelay(index)
+    }
+    return getStaggerDelay(index)
+  }
+
+  // Skip y-transform on mobile/reduced for performance
+  const getInitial = () => {
+    if (reducedAnimations) {
+      return { opacity: 0 }
+    }
+    return { opacity: 0, y: 20 }
+  }
+
+  const getAnimate = () => {
+    if (reducedAnimations) {
+      return { opacity: 1 }
+    }
+    return { opacity: 1, y: 0 }
+  }
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        delay: index * 0.08,
-        duration: 0.5,
-        ease: EASE_SMOOTH
-      }}
+      initial={getInitial()}
+      animate={getAnimate()}
+      transition={getTransition()}
       className="relative group"
     >
       {/* Compare Button - positioned absolutely */}
@@ -90,31 +144,8 @@ export const ToolCard = React.memo(function ToolCard({ tool, index = 0, showComp
 
           {/* Footer */}
           <div className="mt-4 pt-4 border-t border-white/20 dark:border-white/10 flex items-center justify-between">
-            {/* Rating */}
-            {tool.rating && (
-              <div className="flex items-center gap-1.5">
-                <div className="flex items-center">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <motion.span
-                      key={i}
-                      initial={{ opacity: 0, scale: 0 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: index * 0.08 + i * 0.05, duration: 0.3 }}
-                      className={`text-sm ${
-                        i < Math.floor(tool.rating!)
-                          ? 'text-amber-400'
-                          : 'text-genesis-muted/30'
-                      }`}
-                    >
-                      ★
-                    </motion.span>
-                  ))}
-                </div>
-                <span className="text-xs text-genesis-muted font-medium">
-                  {tool.rating.toFixed(1)}
-                </span>
-              </div>
-            )}
+            {/* Rating - Static component, no per-star animation */}
+            {tool.rating && <StarRating rating={tool.rating} />}
 
             {/* Category */}
             {tool.category && (
@@ -124,8 +155,8 @@ export const ToolCard = React.memo(function ToolCard({ tool, index = 0, showComp
             )}
           </div>
 
-          {/* View Details Arrow */}
-          <div className="mt-4 flex items-center justify-end opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0">
+          {/* View Details Arrow - Only show on desktop */}
+          <div className="mt-4 flex items-center justify-end opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0 hidden md:flex">
             <span className="text-sm text-genesis-muted font-medium flex items-center gap-2">
               View Details
               <svg
