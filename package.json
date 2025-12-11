@@ -38,6 +38,15 @@
     "react-dom": "19.2.0",
     "tailwind-merge": "^3.4.0"
   },
+  "browserslist": [
+    "Chrome >= 111",
+    "Firefox >= 113",
+    "Safari >= 15.4",
+    "Edge >= 111",
+    "iOS >= 15.4",
+    "not dead",
+    "not op_mini all"
+  ],
   "devDependencies": {
     "@next/bundle-analyzer": "^16.0.7",
     "@tailwindcss/postcss": "^4",

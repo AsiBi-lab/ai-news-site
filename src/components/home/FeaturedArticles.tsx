@@ -61,7 +61,7 @@ export async function FeaturedArticles() {
               : null
 
             return (
-              <Link key={article.id} href={`/articles/${article.slug}`} className="group block" aria-label={`Read article: ${article.title}`}>
+              <Link key={article.id} href={`/articles/${article.slug}`} className="group block">
                 <Card className="h-full overflow-hidden border-border/50 bg-card/50 hover:bg-card hover:border-border transition-all duration-200">
                   {article.featured_image && (
                     <div className="relative aspect-[16/10] overflow-hidden">
