@@ -4,6 +4,7 @@ import React from 'react'
 import { Badge } from '@/components/ui/badge'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Scale } from 'lucide-react'
 import type { AITool } from '@/types/database'
 import { motion } from 'framer-motion'
 import { EASE_SMOOTH } from '@/lib/animations/variants'
@@ -11,6 +12,7 @@ import { EASE_SMOOTH } from '@/lib/animations/variants'
 interface Props {
   tool: AITool
   index?: number
+  showCompare?: boolean
 }
 
 const pricingColors: Record<string, string> = {
@@ -20,7 +22,7 @@ const pricingColors: Record<string, string> = {
   enterprise: 'bg-violet-500/20 text-violet-600 dark:bg-violet-500/30 dark:text-violet-400',
 }
 
-export const ToolCard = React.memo(function ToolCard({ tool, index = 0 }: Props) {
+export const ToolCard = React.memo(function ToolCard({ tool, index = 0, showCompare = true }: Props) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -30,8 +32,21 @@ export const ToolCard = React.memo(function ToolCard({ tool, index = 0 }: Props)
         duration: 0.5,
         ease: EASE_SMOOTH
       }}
+      className="relative group"
     >
-      <Link href={`/tools/${tool.slug}`} className="block h-full group">
+      {/* Compare Button - positioned absolutely */}
+      {showCompare && (
+        <Link
+          href={`/compare?tools=${tool.slug}`}
+          className="absolute top-3 right-3 z-10 p-2 rounded-xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-border/50 opacity-0 group-hover:opacity-100 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-200 shadow-sm"
+          title="Add to Compare"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Scale className="w-4 h-4" />
+        </Link>
+      )}
+
+      <Link href={`/tools/${tool.slug}`} className="block h-full">
         <div className="h-full card-genesis rounded-3xl overflow-hidden p-6 flex flex-col">
           {/* Header */}
           <div className="flex items-start gap-4 mb-4">

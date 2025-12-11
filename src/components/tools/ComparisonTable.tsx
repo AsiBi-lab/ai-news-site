@@ -63,9 +63,12 @@ export function ComparisonTable({ tools }: Props) {
                   )}
                   <Link
                     href={`/tools/${tool.slug}`}
-                    className="font-semibold hover:text-primary transition-colors"
+                    className="group font-semibold hover:text-primary transition-colors inline-flex flex-col items-center gap-1"
                   >
-                    {tool.name}
+                    <span className="group-hover:underline underline-offset-2">{tool.name}</span>
+                    <span className="text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity">
+                      View details →
+                    </span>
                   </Link>
                 </div>
               </th>
